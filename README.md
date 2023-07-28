@@ -6,9 +6,9 @@ This is an AI chatbot that is able to answer any question about the information 
 
 # Tools 📝
 
-* Streamlit 
-* OpenAI 
-* Postgres
+* **Streamlit:** For an interactive, user-friendly web-based interface.
+* **OpenAI:** The power behind the chatbot's intelligent responses.
+* **Postgres:** The database where all the magic data resides.
 
 
 
@@ -47,24 +47,26 @@ This is an AI chatbot that is able to answer any question about the information 
 
 ```
 
-# How It works 
-
-
-
-....
 
 
 # Installation 🛠️ 
 
+1. Clone this repository.
+2. Navigate to the directory and install the necessary Python packages with `pip install -r requirements.txt`.
+3. Add your database credentials and OpenAI API key in the .env file.
 
 # Running the Chatbot 🏃
 
 
+
+# How to use it
+
+* Ask questions - Post questions related to data stored in the database the chatbot is connected to
+* Get answers - Enjoy the structured and dynamic answers the chatbot provides  
+* Save conversations - Preserve conversations into a markdown file for your future use 
+
+
+
 # Contribution 👥
 
-Feel free to make pull requests and add your unique spin to this - feedback and suggestions are also welcome too!
-
-
-# Conclusion 🏁
-
-
+Feel free to make pull requests and add your unique spin to this - insights, feedback and suggestions are also welcome too!
