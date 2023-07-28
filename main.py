@@ -18,15 +18,17 @@ if __name__ == "__main__":
     # Prepare data for the sidebar dropdowns
     sidebar_data = prepare_sidebar_data(database_schema_dict)
     st.sidebar.markdown("<div class='made_by'>Made by SDW🔋</div>", unsafe_allow_html=True)
+
+    
     st.markdown(made_by_sdw, unsafe_allow_html=True)
     st.sidebar.title("🔍 Postgres DB Objects Viewer")
 
 
-    # Dropdown for Schema selection
+    # Dropdown for schema selection
     selected_schema = st.sidebar.selectbox("📂 Select a schema", list(sidebar_data.keys()))
 
 
-    # Dropdown for Table selection based on chosen Schema
+    # Dropdown for table selection based on chosen Schema
     selected_table = st.sidebar.selectbox("📜 Select a table", list(sidebar_data[selected_schema].keys()))
 
 
@@ -45,6 +47,7 @@ if __name__ == "__main__":
     if st.sidebar.button("Save Conversation💾"):
         saved_file_path = save_conversation(st.session_state["full_chat_history"])
         st.sidebar.success(f"Conversation saved to: {saved_file_path}")
+        st.sidebar.markdown(f"Conversation saved! [Open File]({saved_file_path})")
 
 
     # Add a button to clear the chat/conversation
