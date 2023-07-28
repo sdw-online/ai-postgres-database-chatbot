@@ -5,20 +5,12 @@ from utils.system_prompts import get_final_system_prompt
 from utils.chat_functions import run_chat_sequence, clear_chat_history, count_tokens, prepare_sidebar_data
 from utils.database_functions import database_schema_dict
 from utils.functions import functions
+from assets.dark_theme import dark
+from assets.light_theme import light
+from assets.made_by_sdw import made_by_sdw
 
 
 
-
-with open("assets/dark_theme.css", "r") as dark_theme_file:
-    dark = dark_theme_file.read() 
-
-
-with open("assets/light_theme.css", "r") as light_theme_file:
-    light = light_theme_file.read() 
-
-
-with open("assets/made_by_sdw.css", "r") as made_by_sdw_file:
-    made_by_sdw = made_by_sdw_file.read() 
 
 
 
@@ -29,7 +21,7 @@ if __name__== "__main__":
     # Prepare data for the sidebar dropdowns
     sidebar_data = prepare_sidebar_data(database_schema_dict)
 
-
+    
     st.sidebar.markdown("<div class='made_by'>Made by SDW🔋</div>", unsafe_allow_html=True)
 
 
@@ -66,6 +58,8 @@ if __name__== "__main__":
 
 
 
+
+
     # Initialize the theme in session state
     if "theme" not in st.session_state:
         st.session_state.theme = "light"
@@ -73,12 +67,11 @@ if __name__== "__main__":
     # Toggle theme on button click
     if st.sidebar.button("Toggle Theme🚨"):
         st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
+        st.experimental_rerun()
 
     # Apply the theme based on session state
     theme_style = dark if st.session_state.theme == "dark" else light
     st.markdown(theme_style, unsafe_allow_html=True)
-
-
 
 
 
@@ -134,4 +127,3 @@ if __name__== "__main__":
         st.write(f"Tokens Used: {current_tokens}/{max_tokens}")
         if current_tokens > max_tokens:
             st.warning("Note: Due to character limits, some older messages might not be considered in ongoing conversations with the AI.")
-

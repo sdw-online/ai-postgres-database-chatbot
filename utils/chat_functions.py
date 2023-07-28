@@ -3,7 +3,7 @@ import tiktoken
 import streamlit as st
 from utils.config import AI_MODEL
 from utils.api_functions import send_api_request_to_openai_api, execute_function_call
-from utils.functions import functions
+
 
 
 
