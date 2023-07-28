@@ -1,7 +1,9 @@
 import os
 import datetime
 
-def save_conversation_to_markdown(conversation_history, directory="conversation_history"):
+
+
+def save_conversation(conversation_history, directory="conversation_history"):
     """
     Save a given conversation history to a markdown file with timestamps.
     """

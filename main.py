@@ -4,7 +4,7 @@ from utils.system_prompts import get_final_system_prompt
 from utils.chat_functions import run_chat_sequence, clear_chat_history, count_tokens, prepare_sidebar_data
 from utils.database_functions import database_schema_dict
 from utils.function_calling_spec import functions
-from utils.helper_functions import  save_conversation_to_markdown
+from utils.helper_functions import  save_conversation
 from assets.dark_theme import dark
 from assets.light_theme import light
 from assets.made_by_sdw import made_by_sdw
@@ -42,10 +42,14 @@ if __name__ == "__main__":
     st.markdown(f"<body class='{current_theme}'></body>", unsafe_allow_html=True)
 
 
+    if st.sidebar.button("Save Conversation💾"):
+        saved_file_path = save_conversation(st.session_state["full_chat_history"])
+        st.sidebar.success(f"Conversation saved to: {saved_file_path}")
+
 
     # Add a button to clear the chat/conversation
     if st.sidebar.button("Clear Conversation🗑️"):
-        save_conversation_to_markdown(st.session_state["full_chat_history"]) 
+        save_conversation(st.session_state["full_chat_history"]) 
         clear_chat_history()
 
 
