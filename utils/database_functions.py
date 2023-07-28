@@ -1,64 +1,78 @@
+# Return different information on database objects in Postgres
 import psycopg2
-import os
+import os 
 from dotenv import load_dotenv
-import json
-import openai
-import requests
-from tenacity import retry, wait_random_exponential, stop_after_attempt
-from termcolor import colored
-import logging
-from datetime import datetime
 
-# Constants and Environment Variables
-GPT_MODEL = 'gpt-3.5-turbo-0613'
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
 load_dotenv()
 
-# PostgreSQL Connection Setup
-host = os.getenv("HOST")
-port = os.getenv("PORT")
-database = os.getenv("SEMANTIC_DB")
-username = os.getenv("POSTGRES_USERNAME")
-password = os.getenv("POSTGRES_PASSWORD")
-postgres_connection = psycopg2.connect(host=host, port=port, dbname=database, user=username, password=password)
-postgres_connection.set_session(autocommit=True)
 
-# Check PostgreSQL connection status
+# Set up Postgres database credentials
+db_credentials = {
+    'dbname'    :   os.getenv("SEMANTIC_DB"),
+    'user'      :   os.getenv("POSTGRES_USERNAME"),
+    'password'  :   os.getenv("POSTGRES_PASSWORD"),
+    'host'      :   os.getenv("HOST"),
+    'port'      :   os.getenv("PORT")
+}
+
+# Establish connection with PostgreSQL
+try:
+    postgres_connection = psycopg2.connect(**db_credentials)
+    postgres_connection.set_session(autocommit=True)
+except Exception as e:
+    raise ConnectionError(f"Unable to connect to the database due to: {e}")
+
+
+
+# Create a database cursor to execute PostgreSQL commands
+cursor = postgres_connection.cursor()
+
+
+# Validate the PostgreSQL connection status
 if postgres_connection.closed == 0:
-    print(f"Connected successfully to {database} database\nConnection Details: {postgres_connection.dsn}")
+    print(f"Connected successfully to {db_credentials['dbname']} database\nConnection Details: {postgres_connection.dsn}")
 else:
     raise ConnectionError("Unable to connect to the database")
 
-# Fetching PostgreSQL Schema Details
+
+
+
 def get_schema_names(database_connection):
+    """ Returns a list of schema names """
     cursor = database_connection.cursor()
     cursor.execute("SELECT schema_name FROM information_schema.schemata;")
     schema_names = [row[0] for row in cursor.fetchall()]
     cursor.close()
     return schema_names
 
+
 def get_table_names(connection, schema_name):
+    """ Returns a list of table names """
     cursor = connection.cursor()
     cursor.execute(f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{schema_name}';")
     table_names = [table[0] for table in cursor.fetchall()]
     cursor.close()
     return table_names
 
+
 def get_column_names(connection, table_name, schema_name):
+    """ Returns a list of column names """
     cursor = connection.cursor()
     cursor.execute(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}' AND table_schema = '{schema_name}';")
     column_names = [col[0] for col in cursor.fetchall()]
     cursor.close()
     return column_names
 
+
 def get_database_info(connection, schema_names):
+    """ Fetches information about the schemas, tables and columns in the database """
     table_dicts = []
     for schema in schema_names:
         for table_name in get_table_names(connection, schema):
             column_names = get_column_names(connection, table_name, schema)
             table_dicts.append({"table_name": table_name, "column_names": column_names, "schema_name": schema})
     return table_dicts
-
 
 
 # To print details to the console:
@@ -72,6 +86,7 @@ database_schema_string = "\n".join(
     ]
 )
 
+# Specify function descriptions for OpenAI function calling 
 functions = [
     {
         "name": "ask_postgres_database",
@@ -81,11 +96,8 @@ functions = [
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": f"""
-                            SQL query extracting info to answer the user's question.
-                            SQL should be written using this database schema:
-                            {database_schema_string}
-                            The query should be returned in plain text, not in JSON.
+                    "description": f""" The SQL query that extracts the information that answers the user's question from the Postgres database. Write the SQL in the following schema structure:
+                            {database_schema_string}. Write the query in SQL format only, not in JSON. Do not include any line breaks or characters that cannot be executed in Postgres.  
                             """,
                 }
             },
@@ -95,8 +107,13 @@ functions = [
 ]
 
 
-
-
-class Functions:
-    def __init__(self):
-        self.functions = functions
+def ask_postgres_database(connection, query):
+    """ Execute the SQL query provided by OpenAI and return the results """
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query)
+        results = str(cursor.fetchall())
+        cursor.close()
+    except Exception as e:
+        results = f"Query failed with error: {e}"
+    return results
