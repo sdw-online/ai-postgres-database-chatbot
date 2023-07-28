@@ -1,5 +1,4 @@
 import os 
-import openai
 from dotenv import load_dotenv
 
 
@@ -17,5 +16,19 @@ db_credentials = {
 
 
 # Set up OpenAI variables 
-openai.api_key  =   os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY  =   os.getenv("OPENAI_API_KEY")
 AI_MODEL        =   'gpt-3.5-turbo-16k'
+
+
+
+# Max number of tokens permitted within a conversation exchange via OpenAI API
+MAX_TOKENS_ALLOWED      =   3000
+
+
+# Max number of messages to exchange with OpenAI API
+MAX_MESSAGES_TO_OPENAI  =   5
+
+
+
+# An arbitrary number to provide a buffer to avoid reaching exact token limits
+TOKEN_BUFFER            =   100  
