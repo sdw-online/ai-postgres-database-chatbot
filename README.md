@@ -15,6 +15,7 @@ This is an AI chatbot that is able to answer any question about the information 
 # Folder Structure 📂
 
 ```
+
 │   .env
 │   .gitignore
 │   app.py
@@ -44,7 +45,6 @@ This is an AI chatbot that is able to answer any question about the information 
     └───__pycache__
             ...
 
-
 ```
 
 
@@ -57,7 +57,13 @@ This is an AI chatbot that is able to answer any question about the information 
 
 # Running the Chatbot 🏃
 
+1. After setting up, run the command: 
 
+```
+streamlit run app.py
+```
+
+2. The chatbot UI will open in your default web browser. Engage and enjoy!
 
 # How to use it
 
