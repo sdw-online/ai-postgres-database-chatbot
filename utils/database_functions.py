@@ -1,4 +1,3 @@
-# Return different information on database objects in Postgres
 import psycopg2
 from utils.config import db_credentials
 

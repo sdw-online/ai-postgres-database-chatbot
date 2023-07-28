@@ -1,6 +1,3 @@
-# main.py
-
-# Importing necessary libraries
 import streamlit as st
 from utils.config import db_credentials, MAX_TOKENS_ALLOWED, MAX_MESSAGES_TO_OPENAI, TOKEN_BUFFER
 from utils.system_prompts import get_final_system_prompt
@@ -12,6 +9,10 @@ from assets.dark_theme import dark
 from assets.light_theme import light
 from assets.made_by_sdw import made_by_sdw
 
+
+
+
+
 if __name__ == "__main__":
 
     # Prepare data for the sidebar dropdowns
@@ -20,34 +21,47 @@ if __name__ == "__main__":
     st.markdown(made_by_sdw, unsafe_allow_html=True)
     st.sidebar.title("🔍 Postgres DB Objects Viewer")
 
+
     # Dropdown for Schema selection
     selected_schema = st.sidebar.selectbox("📂 Select a schema", list(sidebar_data.keys()))
+
 
     # Dropdown for Table selection based on chosen Schema
     selected_table = st.sidebar.selectbox("📜 Select a table", list(sidebar_data[selected_schema].keys()))
 
+
     # Display columns of the chosen table with interactivity using checkboxes
     st.sidebar.subheader(f"🔗 Columns in {selected_table}")
-    for col in sidebar_data[selected_schema][selected_table]:
-        is_checked = st.sidebar.checkbox(f"📌 {col}")  # This will return True if checked
+    for column in sidebar_data[selected_schema][selected_table]:
+        is_checked = st.sidebar.checkbox(f"📌 {column}") 
+
+
 
     # Retrieve the current theme from session state
     current_theme = st.session_state.get("theme", "light")
     st.markdown(f"<body class='{current_theme}'></body>", unsafe_allow_html=True)
 
+
+
     # Add a button to clear the chat/conversation
     if st.sidebar.button("Clear Conversation🗑️"):
-        save_conversation_to_markdown(st.session_state["full_chat_history"])  # <-- Save before clearing
+        save_conversation_to_markdown(st.session_state["full_chat_history"]) 
         clear_chat_history()
+
+
 
     # Initialize the theme in session state
     if "theme" not in st.session_state:
         st.session_state.theme = "light"
 
+
+
     # Toggle theme on button click
     if st.sidebar.button("Toggle Theme🚨"):
         st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
         st.experimental_rerun()
+
+
 
     # Apply the theme based on session state
     theme_style = dark if st.session_state.theme == "dark" else light
@@ -56,13 +70,19 @@ if __name__ == "__main__":
     # Add title to the Streamlit chatbot app
     st.title("🤖 AI Database Chatbot 🤓")
 
+
+
     # Initialize the full chat messages history for UI
     if "full_chat_history" not in st.session_state:
         st.session_state["full_chat_history"] = [{"role": "system", "content": get_final_system_prompt(db_credentials=db_credentials)}]
 
+
+
     # Initialize the API chat messages history for OpenAI requests
     if "api_chat_history" not in st.session_state:
         st.session_state["api_chat_history"] = [{"role": "system", "content": get_final_system_prompt(db_credentials=db_credentials)}]
+
+
 
     if (prompt := st.chat_input("What do you want to know?")) is not None:
         st.session_state.full_chat_history.append({"role": "user", "content": prompt})
@@ -74,6 +94,8 @@ if __name__ == "__main__":
             total_tokens -= count_tokens(removed_message["content"])
 
         st.session_state.api_chat_history.append({"role": "user", "content": prompt})
+
+
 
     # Display previous chat messages from full_chat_history (ingore system prompt message)
     for message in st.session_state["full_chat_history"][1:]:

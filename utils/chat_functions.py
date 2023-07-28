@@ -1,4 +1,3 @@
-# Importing necessary libraries
 import tiktoken
 import streamlit as st
 from utils.config import AI_MODEL
