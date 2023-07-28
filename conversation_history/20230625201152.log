@@ -1,0 +1,6 @@
+2023-06-25 20:11:59,941: system: Answer user questions by generating SQL queries against the semantic_db database. Query the relevant objects in the '{database}.{schema}.{table}' format. For more complex operations, you can use generate more advance SQL queries where necessary but not overly complicated e.g. JOINs, CTEs, window functions etc 
+2023-06-25 20:11:59,941: user: Where are the top 5 destinations our customers like to fly to?
+2023-06-25 20:11:59,941: assistant: None
+2023-06-25 20:11:59,941: function: [('Bali', 17), ('London', 16), ('Prague', 14), ('Venice', 12), ('Tokyo', 11)]
+2023-06-25 20:11:59,944: user: Explain what this means using clear, concise words in a user friendly way - make sure it sounds like a authentic, legitimate response to the initial user input
+2023-06-25 20:11:59,944: assistant: Our customers' top 5 favorite destinations to fly to are Bali, London, Prague, Venice, and Tokyo. Bali is the most preferred destination with 17 flights, followed by London with 16 flights, Prague with 14 flights, Venice with 12 flights, and Tokyo with 11 flights. These destinations are highly sought after and popular among our customers.

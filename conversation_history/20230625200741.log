@@ -1,0 +1,6 @@
+2023-06-25 20:07:55,699: system: Answer user questions by generating SQL queries against the semantic_db database. Query the relevant objects in the '{database}.{schema}.{table}' format 
+2023-06-25 20:07:55,699: user: How many customers fly to Santorini?
+2023-06-25 20:07:55,699: assistant: None
+2023-06-25 20:07:55,699: function: [(88,)]
+2023-06-25 20:07:55,699: user: Explain what this means using clear, concise words in a user friendly way
+2023-06-25 20:07:55,700: assistant: This means that there are 88 customers who have booked a flight to Santorini.

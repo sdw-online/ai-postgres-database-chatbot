@@ -1,0 +1,6 @@
+2023-06-25 20:04:40,824: system: Answer user questions by generating SQL queries against the semantic_db database. Query the relevant objects in the '{database}.{schema}.{table}' format 
+2023-06-25 20:04:40,824: user: How many customers do we have at the moment?
+2023-06-25 20:04:40,824: assistant: None
+2023-06-25 20:04:40,824: function: [(322,)]
+2023-06-25 20:04:40,824: user: Explain what this means using clear, concise words in a user friendly way
+2023-06-25 20:04:40,824: assistant: Currently, we have 322 customers in our database.
