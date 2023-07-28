@@ -1,34 +1,23 @@
+# main.py
+
 # Importing necessary libraries
 import streamlit as st
 from utils.config import db_credentials, MAX_TOKENS_ALLOWED, MAX_MESSAGES_TO_OPENAI, TOKEN_BUFFER
 from utils.system_prompts import get_final_system_prompt
 from utils.chat_functions import run_chat_sequence, clear_chat_history, count_tokens, prepare_sidebar_data
 from utils.database_functions import database_schema_dict
-from utils.functions import functions
+from utils.function_calling_spec import functions
+from utils.helper_functions import  save_conversation_to_markdown
 from assets.dark_theme import dark
 from assets.light_theme import light
 from assets.made_by_sdw import made_by_sdw
 
-
-
-
-
-
-
-if __name__== "__main__":
-
+if __name__ == "__main__":
 
     # Prepare data for the sidebar dropdowns
     sidebar_data = prepare_sidebar_data(database_schema_dict)
-
-    
     st.sidebar.markdown("<div class='made_by'>Made by SDW🔋</div>", unsafe_allow_html=True)
-
-
-
     st.markdown(made_by_sdw, unsafe_allow_html=True)
-
-
     st.sidebar.title("🔍 Postgres DB Objects Viewer")
 
     # Dropdown for Schema selection
@@ -41,9 +30,6 @@ if __name__== "__main__":
     st.sidebar.subheader(f"🔗 Columns in {selected_table}")
     for col in sidebar_data[selected_schema][selected_table]:
         is_checked = st.sidebar.checkbox(f"📌 {col}")  # This will return True if checked
-        # You can add functionalities based on whether a checkbox is checked or not
-
-
 
     # Retrieve the current theme from session state
     current_theme = st.session_state.get("theme", "light")
@@ -51,14 +37,8 @@ if __name__== "__main__":
 
     # Add a button to clear the chat/conversation
     if st.sidebar.button("Clear Conversation🗑️"):
+        save_conversation_to_markdown(st.session_state["full_chat_history"])  # <-- Save before clearing
         clear_chat_history()
-
-
-
-
-
-
-
 
     # Initialize the theme in session state
     if "theme" not in st.session_state:
@@ -73,8 +53,6 @@ if __name__== "__main__":
     theme_style = dark if st.session_state.theme == "dark" else light
     st.markdown(theme_style, unsafe_allow_html=True)
 
-
-
     # Add title to the Streamlit chatbot app
     st.title("🤖 AI Database Chatbot 🤓")
 
@@ -82,15 +60,13 @@ if __name__== "__main__":
     if "full_chat_history" not in st.session_state:
         st.session_state["full_chat_history"] = [{"role": "system", "content": get_final_system_prompt(db_credentials=db_credentials)}]
 
-
     # Initialize the API chat messages history for OpenAI requests
     if "api_chat_history" not in st.session_state:
         st.session_state["api_chat_history"] = [{"role": "system", "content": get_final_system_prompt(db_credentials=db_credentials)}]
 
-
     if (prompt := st.chat_input("What do you want to know?")) is not None:
         st.session_state.full_chat_history.append({"role": "user", "content": prompt})
-        
+
         # Limit the number of messages sent to OpenAI by token count
         total_tokens = sum(count_tokens(message["content"]) for message in st.session_state["api_chat_history"])
         while total_tokens + count_tokens(prompt) + TOKEN_BUFFER > MAX_TOKENS_ALLOWED:
@@ -98,7 +74,6 @@ if __name__== "__main__":
             total_tokens -= count_tokens(removed_message["content"])
 
         st.session_state.api_chat_history.append({"role": "user", "content": prompt})
-
 
     # Display previous chat messages from full_chat_history (ingore system prompt message)
     for message in st.session_state["full_chat_history"][1:]:
@@ -112,11 +87,11 @@ if __name__== "__main__":
             # Send only the most recent messages to OpenAI from api_chat_history
             recent_messages = st.session_state["api_chat_history"][-MAX_MESSAGES_TO_OPENAI:]
             new_message = run_chat_sequence(recent_messages, functions)  # Get the latest message
-            
+
             # Add this latest message to both api_chat_history and full_chat_history
             st.session_state["api_chat_history"].append(new_message)
             st.session_state["full_chat_history"].append(new_message)
-            
+
             # Display the latest message from the assistant
             st.chat_message("assistant", avatar='🤖').write(new_message["content"])
 
