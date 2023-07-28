@@ -6,7 +6,6 @@ import psycopg2
 import requests
 import tiktoken
 import streamlit as st
-from dotenv import load_dotenv
 from utils.system_prompts import get_final_system_prompt
 from tenacity import retry, wait_random_exponential, stop_after_attempt
 

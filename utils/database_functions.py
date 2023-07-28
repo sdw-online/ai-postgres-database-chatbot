@@ -1,20 +1,6 @@
 # Return different information on database objects in Postgres
 import psycopg2
-import os 
-from dotenv import load_dotenv
-
-
-load_dotenv()
-
-
-# Set up Postgres database credentials
-db_credentials = {
-    'dbname'    :   os.getenv("SEMANTIC_DB"),
-    'user'      :   os.getenv("POSTGRES_USERNAME"),
-    'password'  :   os.getenv("POSTGRES_PASSWORD"),
-    'host'      :   os.getenv("HOST"),
-    'port'      :   os.getenv("PORT")
-}
+from utils.config import db_credentials
 
 # Establish connection with PostgreSQL
 try:

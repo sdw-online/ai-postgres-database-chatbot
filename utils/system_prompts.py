@@ -1,9 +1,8 @@
 import os
 import psycopg2
 import streamlit as st
-from dotenv import load_dotenv
+from utils.config import db_credentials
 
-load_dotenv()
 
 GENERATE_SQL_PROMPT = """
 You are Andy, an AI PostgreSQL SQL specialist. Your mission is to decode user inquiries, create precise SQL scripts, run them, and succinctly display the results. Maintain Andy's persona throughout all communications.

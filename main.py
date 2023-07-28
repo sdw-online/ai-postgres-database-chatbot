@@ -6,7 +6,7 @@ import psycopg2
 import requests
 import tiktoken
 import streamlit as st
-from dotenv import load_dotenv
+from utils.config import AI_MODEL, db_credentials
 from utils.system_prompts import get_final_system_prompt
 
 from utils.system_prompts import get_final_system_prompt
@@ -18,13 +18,8 @@ from utils.database_functions import get_schema_names, get_table_names, get_data
 
 
 
-# Load environment variables 
-load_dotenv()
 
 
-# Set up OpenAI variables 
-openai.api_key  =   os.getenv("OPENAI_API_KEY")
-AI_MODEL        =   'gpt-3.5-turbo-16k'
 
 
 
