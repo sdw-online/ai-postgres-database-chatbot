@@ -1,7 +1,6 @@
-import os
 import psycopg2
 import streamlit as st
-from utils.config import db_credentials
+from config import db_credentials
 
 
 GENERATE_SQL_PROMPT = """
@@ -62,9 +61,6 @@ def get_all_tables_from_db(db_credentials: dict):
     conn.close()
     return tables
 
-def get_system_prompt_for_all_tables(db_credentials: dict):
-    # all_table_contexts = get_all_table_contexts(db_credentials)
-    return GENERATE_SQL_PROMPT#.format(context=all_table_contexts)
 
 def get_all_table_contexts(db_credentials: dict):
     tables = get_all_tables_from_db(db_credentials)
@@ -86,21 +82,13 @@ def get_data_dictionary(db_credentials: dict):
         data_dict[f"{schema}.{table}"] = {col[0]: col[1] for col in columns}
         cursor.close()
         conn.close()
-    return data_dict  # Return data_dict directly
+    return data_dict  
 
 
 def get_final_system_prompt(db_credentials: dict):
-    # SYSTEM_PROMPT = get_data_dictionary(db_credentials)
-    return GENERATE_SQL_PROMPT#.format(context=SYSTEM_PROMPT)
+    return GENERATE_SQL_PROMPT
 
 if __name__ == "__main__":
-    db_credentials = {
-        'dbname': os.getenv("SEMANTIC_DB"),
-        'user': os.getenv("POSTGRES_USERNAME"),
-        'password': os.getenv("POSTGRES_PASSWORD"),
-        'host': os.getenv("HOST"),
-        'port': os.getenv("PORT")
-    }
     
     st.header("System prompt for AI Database Chatbot")
     
