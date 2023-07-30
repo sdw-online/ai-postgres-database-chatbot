@@ -1,14 +1,14 @@
 import json
 import requests
-from tenacity import retry, wait_random_exponential, stop_after_attempt
 from utils.config import OPENAI_API_KEY, AI_MODEL
 from utils.database_functions import ask_postgres_database, postgres_connection
+from tenacity import retry, wait_random_exponential, stop_after_attempt
 
 
 
 @retry(wait=wait_random_exponential(min=1, max=40), stop=stop_after_attempt(3))
 def send_api_request_to_openai_api(messages, functions=None, function_call=None, model=AI_MODEL, openai_api_key=OPENAI_API_KEY):
-    """ Send the API request to the OpenAI API via Chat Completions  """
+    """ Send the API request to the OpenAI API via Chat Completions endpoint """
     try:
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {openai_api_key}"}
         json_data = {"model": model, "messages": messages}
